@@ -4,8 +4,8 @@ close all
 
 N = [20,100,500];
 T = 10;
-dt = T./N;
-lam = -3/4 + i*pi();
+%lam = -3/4 + i*pi();
+lam = -3/4 + i;
 
 
 Euler_E = @(u_n,lam,dt)(u_n*(1+lam*dt));
@@ -49,15 +49,28 @@ for n = 1:size(N,2)
     plot(t{n}, real(U_Crank_Nico{n}))
     axis([0, T, -1, 1])
 end
-
+legend('Analytic','Euler Explicit','Euler Implicit','Crank Nicolson')
 %% part 3
 z = linspace(-10,0.05);
+G_analytic = @(z)(exp(z));
 G_Euler_E = @(z)(1 + z);
 G_Euler_I = @(z)(1./(1-z));
 G_Crank_Nico = @(z)((2 + z)./(2 - z));
 figure(2)
-plot(z,G_Euler_E(z),z,G_Euler_I(z),z,G_Crank_Nico(z))
+plot(z,G_analytic(z),z,G_Euler_E(z),z,G_Euler_I(z),z,G_Crank_Nico(z))
+legend('Analytic','Euler Explicit','Euler Implicit','Crank Nicolson')
 
-
-
-
+%% part 5
+figure(3)
+clear i
+dt = T./N;
+lam1 = -3/4 + i*pi();
+lam2 = -3/4 + i;
+plot(lam1.*dt,'.')
+hold on
+plot(lam2.*dt,'.')
+x = linspace(-1,1);
+plot(x,sqrt(1-x.^2),'k')
+plot(x,-sqrt(1-x.^2),'k')
+axis equal
+grid on
