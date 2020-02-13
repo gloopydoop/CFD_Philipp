@@ -123,9 +123,11 @@ while t_cum < t_final
   % Track shock
   % I know this is a dodgy way of tracking the shock. (it doesn't work
   % after reflection)
-  shock(k,1) = DX*sum(rho>RHO1);
+  d_rho = (rho(2:end) - rho(1:end-1));
+  shock_index = find(abs(d_rho) == max(abs(d_rho)));
+  shock(k,1) = X(shock_index);
   shock(k,2) = t_cum;
-  
+  shock(k,3) = max(U(:,2))/(rho(U(:,2) == max(U(:,2)))-RHO1);
   % Plot 
   if k == 1           % plot initial condition
     figure(2)
