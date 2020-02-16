@@ -14,4 +14,4 @@ global GAMMA R P0 RHO0 P1 RHO1 Kentr;
 %%%%% Here you have to define the flux function!!!!
 
  F(:,1) = U(:,2);
- F(:,2) = U(:,2).^2./U(:,1) + Kentr.*U(:,1).^GAMMA; % this also feels dodgy
+ F(:,2) = U(:,2).^2./U(:,1) + Kentr.*U(:,1).^GAMMA;

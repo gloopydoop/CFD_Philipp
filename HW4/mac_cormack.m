@@ -21,7 +21,7 @@ tmp = dx(1,F);                  % Take a forward difference of the
                                 % in three directions,(forward, backward,
                                 % and central) 
 			       
-Up = U - dt*tmp;                % Update solution according to              %way dodge?
+Up = U - dt*tmp;                % Update solution according to              
                                 % predictor step equation (7)
 
 Up = boundary_cond(Up);         % Set boundary conditions on

@@ -12,13 +12,12 @@ CN = [0.5,0.9];
 
 for j = 1:length(CN)
     for i = 1:length(C0_in)
-        shock = shocktube(C0_in(i),C2_in(i),CN(j))
+        shock = shocktube(C0_in(i),C2_in(i),CN(j));
         close all
-        plot(shock(:,2),shock(:,1))
-        %c_left = sqrt(RHO0.^(GAMMA-1)*Kentr*GAMMA)
-        %v_shock = RHO0*c_left/(RHO0 - RHO1);
-        hold on
-        plot([0,0.003],[1.5, 1.5 + 470.5511*0.003])
+        coefs = polyfit(shock(10:end,2),shock(10:end,1),1); % tendline for shock
+        s = mean(shock(10:end,3)); % average of analytic solution
+        disp(['CN:',num2str(CN(j)),', C0:',num2str(C0_in(i)),', C2:',num2str(C2_in(i)),...
+            '   Measured: ',num2str(coefs(1)),'m/s   Analytic: ',num2str(s),'m/s'])
         
     end
 end

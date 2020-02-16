@@ -9,7 +9,7 @@ function U = boundary_cond(U);
 %%%% Here you have to implement the boudary conditions !!!
 
 
-U(1,1)=U(2,1);           % not sure about these!
-U(end,1)=U(end-1,1);         % not sure about these!
+U(1,1)=U(2,1);          
+U(end,1)=U(end-1,1);        
 U(1,2)=0;
 U(end,2)=0;

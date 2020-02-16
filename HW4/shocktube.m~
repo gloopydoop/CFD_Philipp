@@ -110,7 +110,7 @@ while t_cum < t_final
       dt = CN*DX/umax;
   
   t_cum = t_cum + dt;
-  k = k+1;
+  
   
   U = mac_cormack(U,dt);      % Use MacCormack to update the solution
   
@@ -119,15 +119,24 @@ while t_cum < t_final
   u    = U(:,2)./rho; 
   p    = Kentr*rho.^GAMMA;
   
-
+  % -----------------------------------------------------------------------
   % Track shock
   % I know this is a dodgy way of tracking the shock. (it doesn't work
   % after reflection)
-  shock_index = sum(rho>RHO1);
-  shock(k,1) = DX*sum(rho>RHO1);
-
+  % shock(:,1) x location of shock
+  % shock(
+  if t_cum > 0.001 && t_cum < 0.003
+  k = k+1;
+  d_rho = (rho(2:end) - rho(1:end-1)); % slope of density
+  shock_index = find(abs(d_rho) == max(abs(d_rho))); % assume shock has highest slope
+  shock(k,1) = X(shock_index);
   shock(k,2) = t_cum;
-  
+  d_rhoU = (U(2:end,2) - U(1:end-1,2))/DX; % slope of rho*U
+  rhoUL = mean(U([d_rhoU;0] < 10 & u > 10,2)); % mean of the flat part & non zero of rho*U
+  rhoL = mean(U([d_rhoU;0] < 10 & u > 10,1)); % mean of the flat part & non zero of rho*U
+  shock(k,3) = rhoUL/(rhoL-RHO1);
+  end
+  % -----------------------------------------------------------------------
   % Plot 
   if k == 1           % plot initial condition
     figure(2)
@@ -148,10 +157,10 @@ while t_cum < t_final
   end;
 end;
 % plot the solution at the end time
-H = figure(10);
+H = figure('position',[1,1,400,600]);
 subplot(311), plot(X,rho(:,1),'-+'); , hold on, grid on, title('Density')
 subplot(312), plot(X,u,'-+');hold on, grid on, title('Velocity')
 subplot(313),plot(X,p,'-+'),grid on, title('Pressure') 
-figure_name = ['CN',num2str(CN*100),'C0',num2str(C0*100),'C2',num2str(C2*100),'.fig'];
-savefig(H,figure_name);
+figure_name = ['CN',num2str(CN*100),'C0',num2str(C0*100),'C2',num2str(C2*100),'.png'];
+saveas(H,figure_name);
 
