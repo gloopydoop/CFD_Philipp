@@ -1,10 +1,6 @@
-clear
-close all
+function [L,f,hx,hy,X,Y] = setup_L_f(Nx,Ny)
 
-Nx = 50;                                 % Number of points in x
-Ny = 50;                                 % Number of points in y
 Lx = 1;  Ly = 1;                         % Size of the domain  
-omega = 1.9;                             % SOR parameter
 hx = Lx/Nx; hy = Ly/Ny;                  % Grid spacing
 x = linspace(0,Lx,Nx+1);                 % x-coordinates length N+1 at grid nodes
 y = linspace(0,Ly,Ny+1);                 % y-coordinates length N+1 at grid nodes
@@ -24,29 +20,3 @@ L = Lapl(Nx, Ny, hx, hy);
 
 % % Set one Dirichlet value to fix pressure in one point
 L(1,:) = zeros(size(f)); L(1,1) = 1; f(1)=0;
-
-% Solve the problem with a direct method (Matlab's backslash)
- p_direct = L\f;
-
-% plot p_direct
-figure(2)
-surf(X, Y, reshape(p_direct, Nx, Ny)')
-zlabel('p_{dir}')
-xlabel('x')
-ylabel('y')
-
-% %-----------------------------------------
-% % 
-% % % Set up the initial guess
-% % p0 = ...;
-% % 
-% % % Set up the tolerance and maximum number of iterations
-% % tol   = ...;
-% % maxit = ...;
-% % 
-% % % Compute the iterative solution
-% % [p, r] = GS_SOR(omega, Nx, Ny, hx, hy, L, f, p0, tol, maxit);
-% 
-% 
-% %-----------------------------------------
-% % plots

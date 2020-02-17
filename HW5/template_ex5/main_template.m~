@@ -1,8 +1,8 @@
-clear
-close all
+function [] = main_template(
 
-Nx = 5;                                 % Number of points in x
-Ny = 5;                                 % Number of points in y
+direct = true;
+Nx = 50;                                 % Number of points in x
+Ny = 50;                                 % Number of points in y
 Lx = 1;  Ly = 1;                         % Size of the domain  
 omega = 1.9;                             % SOR parameter
 hx = Lx/Nx; hy = Ly/Ny;                  % Grid spacing
@@ -23,30 +23,48 @@ f=reshape(f',Nx*Ny,1); % could be wrong!!!
 L = Lapl(Nx, Ny, hx, hy);
 
 % % Set one Dirichlet value to fix pressure in one point
-L(1,:) = ...; L(1,1) = 0; f(1)=...;
-% 
-% % Solve the problem with a direct method (Matlab's backslash)
-% p_direct = L\f;
-% 
-% % plot p_direct
-% figure(2)
-% surf(X, Y, reshape(p_direct, Nx, Ny)')
-% zlabel('p_{dir}')
-% xlabel('x')
-% ylabel('y')
-% 
-% %-----------------------------------------
-% % 
-% % % Set up the initial guess
-% % p0 = ...;
-% % 
-% % % Set up the tolerance and maximum number of iterations
-% % tol   = ...;
-% % maxit = ...;
-% % 
-% % % Compute the iterative solution
-% % [p, r] = GS_SOR(omega, Nx, Ny, hx, hy, L, f, p0, tol, maxit);
-% 
-% 
-% %-----------------------------------------
-% % plots
+L(1,:) = zeros(size(f)); L(1,1) = 1; f(1)=0;
+
+% Solve the problem with a direct method (Matlab's backslash)
+if direct == true
+     p_direct = L\f;
+    % plot p_direct
+    figure(2)
+    surf(X, Y, reshape(p_direct, Nx, Ny)')
+    zlabel('p_{dir}')
+    xlabel('x')
+    ylabel('y')
+    
+else
+
+%-----------------------------------------
+
+% Set up the initial guess
+p0 = zeros(size(f));
+
+% Set up the tolerance and maximum number of iterations
+tol   = 10^-6;
+maxit = 1000;
+
+% Compute the iterative solution
+omega = 1:0.2:2;
+
+[p, r] = GS_SOR(omega, Nx, Ny, hx, hy, L, f, p0, tol, maxit);
+end
+
+figure()
+for i =1:length(omega)
+    
+    semilogy(r)
+    leg{i} = ['\omega = ',num2str(omega(i))];
+    hold on
+end
+
+xlabel('Iteration')
+ylabel('Residual')
+legend(leg)
+
+
+
+%-----------------------------------------
+% plots
